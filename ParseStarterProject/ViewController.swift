@@ -2,7 +2,7 @@
 //  ViewController.swift
 //
 //  Copyright 2011-present Parse Inc. All rights reserved.
-//
+//  Hien Le
 
 import UIKit
 import Parse
@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     
     @IBAction func signIn(sender: AnyObject) {
         
-        let permissions = ["public_profile"]
+        let permissions = ["public_profile", "email"]
         
         
         PFFacebookUtils.logInInBackgroundWithReadPermissions(permissions, block: {
@@ -27,11 +27,16 @@ class ViewController: UIViewController {
                 
                 if let user = user {
                     
-                    self.performSegueWithIdentifier("showSigninScreen", sender: self)
-                    
-                    
+                    if let interestedInWomen = user["interestedInWomen"] {
+                        
+                        self.performSegueWithIdentifier("logUserIn", sender: self)
+                        
+                    } else {
+                        
+                        self.performSegueWithIdentifier("showSigninScreen", sender: self)
+                        
+                    }
                 }
-                
                 
                 
             }
@@ -40,6 +45,7 @@ class ViewController: UIViewController {
             
         })
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -48,10 +54,10 @@ class ViewController: UIViewController {
     }
     
     override func viewDidAppear(animated: Bool) {
-        PFUser.logOut()
         if let username = PFUser.currentUser()?.username {
-            performSegueWithIdentifier("showSiginScreen", sender: self)
-        }
+                self.performSegueWithIdentifier("showSigninScreen", sender: self)
+            }
+    
     }
     
     override func didReceiveMemoryWarning() {
